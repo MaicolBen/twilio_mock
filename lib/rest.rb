@@ -1,4 +1,5 @@
 require 'twilio-ruby'
+require 'twilio_mocker'
 
 module Twilio
   module REST

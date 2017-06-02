@@ -1,4 +1,6 @@
 require 'twilio-ruby'
+require 'webmock'
+require 'twilio_number_generator'
 
 class TwilioMocker
   include Twilio::REST::Utils
@@ -12,10 +14,7 @@ class TwilioMocker
   end
 
   def stub_create_message(attrs)
-    body = twilify(attrs).map { |k, val| [k, val.to_s] }.to_h
-    stub_request(:post, "#{base_twilio_url}/Messages.json")
-      .with(body: body,  headers: headers, basic_auth: basic_auth)
-      .to_return(status: 200, body: response, headers: {})
+    prepare_stub(attrs, 'Messages.json')
   end
 
   def stub_available_numbers
@@ -29,10 +28,7 @@ class TwilioMocker
   end
 
   def stub_buy_number(attrs)
-    body = twilify(attrs).map { |k, val| [k, val.to_s] }.to_h
-    stub_request(:post, "#{base_twilio_url}/IncomingPhoneNumbers.json")
-      .with(body: body, headers: headers, basic_auth: basic_auth)
-      .to_return(status: 200, body: response, headers: {})
+    prepare_stub(attrs, 'IncomingPhoneNumbers.json')
   end
 
   private
@@ -57,5 +53,12 @@ class TwilioMocker
 
   def base_twilio_url
     "https://#{HOST}/#{API_VERSION}/Accounts/#{@username}"
+  end
+
+  def prepare_stub(attrs, path)
+    body = twilify(attrs).map { |k, val| [k, val.to_s] }.to_h
+    stub_request(:post, "#{base_twilio_url}/#{path}")
+      .with(body: body, headers: headers, basic_auth: basic_auth)
+      .to_return(status: 200, body: response, headers: {})
   end
 end
