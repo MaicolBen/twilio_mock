@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    twilio-mock (0.0.1)
+    twilio_mock (0.1.0)
       twilio-ruby (~> 4.13, >= 4.13.0)
       webmock (~> 3.0, >= 3.0.1)
 
@@ -18,6 +18,7 @@ GEM
     jwt (1.5.6)
     multi_json (1.12.1)
     public_suffix (2.0.5)
+    rake (11.3.0)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
@@ -45,9 +46,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.14)
-  rspec (~> 3.6, >= 3.6.0)
-  twilio-mock!
+  rake
+  rspec
+  twilio_mock!
 
 BUNDLED WITH
-   1.14.2
+   1.14.5
