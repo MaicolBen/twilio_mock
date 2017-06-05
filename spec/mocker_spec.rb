@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe TwilioMocker do
+RSpec.describe TwilioMock::Mocker do
   let(:client) { Twilio::REST::Client.new }
   let(:available_numbers) { client.account.available_phone_numbers.get('US').local.list({}) }
   let(:first_available_number) { available_numbers.first.phone_number }
@@ -13,7 +13,7 @@ RSpec.describe TwilioMocker do
   end
 
   describe 'buy a number' do
-    it 'returns a test number' do
+    it 'calls the incoming api' do
       expect_any_instance_of(Twilio::REST::IncomingPhoneNumbers).to receive(:create)
 
       client.account.incoming_phone_numbers.create(
@@ -25,7 +25,7 @@ RSpec.describe TwilioMocker do
   end
 
   describe 'sends a sms' do
-    it 'returns a test number' do
+    it 'calls the message api' do
       expect_any_instance_of(Twilio::REST::Messages).to receive(:create)
 
       client.account.messages.create({

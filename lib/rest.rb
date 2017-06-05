@@ -1,34 +1,33 @@
 require 'twilio-ruby'
-require 'twilio_mocker'
 
 module Twilio
   module REST
     class Messages < ListResource
       def create(attrs)
-        TwilioMocker.new.stub_create_message(attrs)
+        TwilioMock::Mocker.new.create_message(attrs) if TwilioMock::Testing.enabled?
         super(attrs)
       end
     end
 
     class IncomingPhoneNumbers < ListResource
       def create(attrs)
-        TwilioMocker.new.stub_buy_number(attrs)
+        TwilioMock::Mocker.new.buy_number(attrs) if TwilioMock::Testing.enabled?
         super(attrs)
       end
     end
 
     class AvailablePhoneNumbers < ListResource
       def get(sid)
-        TwilioMocker.new.stub_available_numbers
+        TwilioMock::Mocker.new.available_number if TwilioMock::Testing.enabled?
         super(sid)
       end
     end
 
     module Lookups
       class PhoneNumbers < NextGenListResource
-        def get(number, query={})
-          TwilioLookupMocker.new.stub_lookup(number)
-          super(number, query)
+        def get(number)
+          TwilioMock::LookupMocker.new.lookup(number) if TwilioMock::Testing.enabled?
+          super(number)
         end
       end
     end

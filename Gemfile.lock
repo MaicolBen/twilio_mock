@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     twilio_mock (0.1.0)
-      twilio-ruby (~> 4.13, >= 4.13.0)
-      webmock (~> 3.0, >= 3.0.1)
+      twilio-ruby (~> 4.13, >= 3)
+      webmock (~> 3.0, >= 2)
 
 GEM
   remote: https://rubygems.org/
