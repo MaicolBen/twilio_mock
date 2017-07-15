@@ -18,15 +18,11 @@ module TwilioMock
       prepare_stub(attrs, 'Messages.json')
     end
 
-    def available_number(number = nil)
-      number ||= NumberGenerator.instance.generate
-      response_numbers = {
-        sid: @username,
-        available_phone_numbers: [{ 'PhoneNumber' => number }]
-      }.to_json
-      stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/US/Local.json")
+    def available_number(number = nil, params = nil)
+      query_string = params && params.any? ? twilify(params).to_h.to_query : ''
+      stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/US/Local.json?#{query_string}")
         .with(headers: headers, basic_auth: basic_auth)
-        .to_return(status: 200, body: response_numbers, headers: {})
+        .to_return(status: 200, body: available_number_response(number), headers: {})
     end
 
     def buy_number(attrs)
@@ -62,6 +58,14 @@ module TwilioMock
       stub_request(:post, "#{base_twilio_url}/#{path}")
         .with(body: body, headers: headers, basic_auth: basic_auth)
         .to_return(status: 200, body: response, headers: {})
+    end
+
+    def available_number_response(number)
+      number ||= NumberGenerator.instance.generate
+      {
+        sid: @username,
+        available_phone_numbers: [{ 'PhoneNumber' => number }]
+      }.to_json
     end
   end
 end

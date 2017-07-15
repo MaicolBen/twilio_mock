@@ -1,7 +1,7 @@
 require 'bundler/setup'
 require 'webmock/rspec'
 
-Dir['./lib/**/*.rb'].each {|file| require file }
+require './lib/twilio_mock'
 
 require './spec/twilio_config'
 

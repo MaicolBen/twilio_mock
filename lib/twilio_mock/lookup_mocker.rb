@@ -1,5 +1,3 @@
-require_relative './mocker'
-
 module TwilioMock
   class LookupMocker < Mocker
     API_VERSION = 'v1'.freeze
