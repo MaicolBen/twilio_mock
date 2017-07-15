@@ -1,3 +1,5 @@
+require 'singleton'
+
 module TwilioMock
   class NumberGenerator
     include Singleton
