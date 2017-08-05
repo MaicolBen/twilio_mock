@@ -9,5 +9,5 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
 
   s.add_dependency 'twilio-ruby', '~> 3.16', '>= 3'
-  s.add_dependency 'webmock', '~> 2.3', '>= 2 '
+  s.add_dependency 'webmock', '~> 3.0', '>= 3'
 end
