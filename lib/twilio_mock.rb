@@ -1,5 +1,6 @@
 require 'twilio_mock/testing'
 require 'twilio_mock/number_generator'
+require 'twilio_mock/messages_queue'
 require 'twilio_mock/mocker'
 require 'twilio_mock/lookup_mocker'
 require 'rest'
