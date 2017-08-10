@@ -21,5 +21,9 @@ module TwilioMock
         end
       end
     end
+
+    def clean
+      @available_numbers = []
+    end
   end
 end

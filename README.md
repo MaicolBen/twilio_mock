@@ -4,11 +4,11 @@
 
 # twilio_mock
 
-It is a mocking library for the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem. It covers buy numbers, sms and lookup for numbers.
+It is a mocking library for the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem. It covers buy numbers, sms and lookup for numbers. It needs Ruby >= 2.1
 
 ## Installation
 
-To install using [Bundler][bundler]:
+To install using bundler:
 
 ```ruby
 gem 'twilio_mock'
@@ -27,26 +27,45 @@ gem install twilio_mock
  * Buy a number (`client.incoming_phone_numbers.create`)
  * Lookup Phone Number information (`lookups_client.phone_numbers.get`)
 
+## Setup
+
+Add `require 'twilio_mock'` to the `spec_helper.rb`, and if you want to inspect the messages sent:
+
+```ruby
+config.after(:each) do
+  TwilioMock::Mocker.new.clean
+end
+```
+
 ## Manual mock
 
 By default the mocking is enabled, but you can disable it and call the mocker with your own parameters:
 
+### Sending messages
+
 ```ruby
 TwilioMock::Testing.disable!
-
+mocker = TwilioMock::Mocker.new
 attrs = {
   from: 'from_number',
   to: 'to_number',
   body: 'text message',
 }
-TwilioMock::Mocker.new.create_message(attrs)
+mocker.create_message(attrs)
 client.messages.create(attrs)
+
+mocker.messages.last # here is your message sent
 
 TwilioMock::Testing.enable!
 
-# or with a block
+```
+
+### Buying numbers
+
+```ruby
 TwilioMock::Testing.disable! do
-  TwilioMock::Mocker.new.available_number(my_number)
+  mocker = TwilioMock::Mocker.new
+  mocker.available_number(my_number)
   number = account.available_phone_numbers.get('US').local.list.first.phone_number
   my_number == number # true
   attrs = {
@@ -54,7 +73,7 @@ TwilioMock::Testing.disable! do
     sms_url: 'my sms callback',
     sms_method: 'POST'
   }
-  TwilioMock::Mocker.new.buy_number(attrs)
+  mocker.buy_number(attrs)
 
   account.incoming_phone_numbers.create(
     phone_number: phone_number,

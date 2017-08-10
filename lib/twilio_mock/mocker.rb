@@ -1,6 +1,7 @@
 require 'twilio-ruby'
 require 'webmock'
 require_relative 'number_generator'
+require 'ostruct'
 
 module TwilioMock
   class Mocker
@@ -15,6 +16,7 @@ module TwilioMock
     end
 
     def create_message(attrs)
+      messages_queue.add OpenStruct.new(attrs)
       prepare_stub(attrs, 'Messages.json')
     end
 
@@ -27,6 +29,15 @@ module TwilioMock
 
     def buy_number(attrs)
       prepare_stub(attrs, 'IncomingPhoneNumbers.json')
+    end
+
+    def messages
+      messages_queue.messages
+    end
+
+    def clean
+      number_generator.clean
+      messages_queue.clean
     end
 
     private
@@ -61,11 +72,19 @@ module TwilioMock
     end
 
     def available_number_response(number)
-      number ||= NumberGenerator.instance.generate
+      number ||= number_generator.generate
       {
         sid: @username,
         available_phone_numbers: [{ 'PhoneNumber' => number }]
       }.to_json
+    end
+
+    def number_generator
+      NumberGenerator.instance
+    end
+
+    def messages_queue
+      MessagesQueue.instance
     end
   end
 end

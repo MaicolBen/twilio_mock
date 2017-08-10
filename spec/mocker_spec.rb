@@ -25,14 +25,41 @@ RSpec.describe TwilioMock::Mocker do
   end
 
   describe 'sends a sms' do
+    let(:from) { first_available_number }
+    let(:to)   { '+15005550003' }
+    let(:body) { 'Example' }
+    let(:params) do
+      {
+        from: from,
+        to: to,
+        body: body
+      }
+    end
+
     it 'calls the message api' do
       expect_any_instance_of(Twilio::REST::Messages).to receive(:create)
 
-      client.account.messages.create({
-        from: first_available_number,
-        to: '+15005550003',
-        body: 'Example'
-      })
+      client.account.messages.create(params)
+    end
+
+    it 'adds to the messages queue' do
+      client.account.messages.create(params)
+
+      message = TwilioMock::Mocker.new.messages.last
+      expect(message.from).to eq from
+      expect(message.to).to eq to
+      expect(message.body).to eq body
+    end
+
+    context 'two messages' do
+      before do
+        client.account.messages.create(params)
+        client.account.messages.create(params)
+      end
+
+      it 'the queue has 2 elements' do
+        expect(TwilioMock::Mocker.new.messages.count).to eq 2
+      end
     end
   end
 end
