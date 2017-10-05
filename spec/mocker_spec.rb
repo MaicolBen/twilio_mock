@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe TwilioMock::Mocker do
   let(:client) { Twilio::REST::Client.new }
-  let(:available_numbers) { client.account.available_phone_numbers.get('US').local.list({}) }
+  let(:available_numbers) { client.api.account.available_phone_numbers('US').local.list({}) }
   let(:first_available_number) { available_numbers.first.phone_number }
   let(:sms_url) { 'test.host/callback' }
 
@@ -14,9 +14,9 @@ RSpec.describe TwilioMock::Mocker do
 
   describe 'buy a number' do
     it 'calls the incoming api' do
-      expect_any_instance_of(Twilio::REST::IncomingPhoneNumbers).to receive(:create)
+      expect_any_instance_of(TwilioExtensions::IncomingPhoneNumbers).to receive(:create)
 
-      client.account.incoming_phone_numbers.create(
+      client.api.account.incoming_phone_numbers.create(
         phone_number: first_available_number,
         sms_url: sms_url,
         sms_method: 'POST'
@@ -36,14 +36,14 @@ RSpec.describe TwilioMock::Mocker do
       }
     end
 
-    it 'calls the message api' do
-      expect_any_instance_of(Twilio::REST::Messages).to receive(:create)
+    it 'calls the message creation' do
+      expect_any_instance_of(TwilioExtensions::Messages).to receive(:create)
 
-      client.account.messages.create(params)
+      client.api.account.messages.create(params)
     end
 
     it 'adds to the messages queue' do
-      client.account.messages.create(params)
+      client.api.account.messages.create(params)
 
       message = TwilioMock::Mocker.new.messages.last
       expect(message.from).to eq from
@@ -53,8 +53,8 @@ RSpec.describe TwilioMock::Mocker do
 
     context 'two messages' do
       before do
-        client.account.messages.create(params)
-        client.account.messages.create(params)
+        client.api.account.messages.create(params)
+        client.api.account.messages.create(params)
       end
 
       it 'the queue has 2 elements' do

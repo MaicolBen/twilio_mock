@@ -23,10 +23,10 @@ gem install twilio_mock
 
 ## Includes
 
- * Send SMS/MMS (`client.messages.create`)
- * Get a new number (`client.available_phone_numbers`)
- * Buy a number (`client.incoming_phone_numbers.create`)
- * Lookup Phone Number information (`lookups_client.phone_numbers.get`)
+ * Send SMS/MMS (`account.messages.create`)
+ * Get a new number (`account.available_phone_numbers`)
+ * Buy a number (`account.incoming_phone_numbers.create`)
+ * Lookup Phone Number information (`client.lookups.v1.phone_numbers`)
 
 ## Setup
 
@@ -53,7 +53,7 @@ attrs = {
   body: 'text message',
 }
 mocker.create_message(attrs)
-client.messages.create(attrs)
+account.messages.create(attrs)
 
 mocker.messages.last # here is your message sent
 
