@@ -1,6 +1,7 @@
 [![Gem Version](https://badge.fury.io/rb/twilio_mock.svg)](https://badge.fury.io/rb/twilio_mock)
 [![Build Status](https://travis-ci.org/MaicolBen/twilio_mock.svg?branch=master)](https://travis-ci.org/MaicolBen/twilio_mock)
-![Code Quality](http://img.shields.io/codeclimate/github/MaicolBen/twilio_mock.svg)
+[![Code Climate](https://codeclimate.com/github/MaicolBen/twilio_mock/badges/gpa.svg)](https://codeclimate.com/github/MaicolBen/twilio_mock)
+[![Test Coverage](https://codeclimate.com/github/MaicolBen/twilio_mock/badges/coverage.svg)](https://codeclimate.com/github/MaicolBen/twilio_mock/coverage)
 
 # twilio_mock
 
