@@ -3,3 +3,4 @@
 .ruby-version
 tmp/
 coverage
+.byebug_history

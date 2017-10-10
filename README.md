@@ -5,7 +5,11 @@
 
 # twilio_mock
 
-It is a mocking library for the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem. It covers buy numbers, sms and lookup for numbers. It needs Ruby >= 2.1
+It is a mocking library for the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem. It covers buy numbers, sms and lookup for numbers. It needs Ruby >= 2.2.
+Which version of `twilio-ruby` do you have?
+ - 3: use 0.2.0 version
+ - 4: use 0.3.0 version
+ - 5: use 0.4.0 version
 
 ## Installation
 
@@ -23,10 +27,10 @@ gem install twilio_mock
 
 ## Includes
 
- * Send SMS/MMS (`client.messages.create`)
- * Get a new number (`client.available_phone_numbers`)
- * Buy a number (`client.incoming_phone_numbers.create`)
- * Lookup Phone Number information (`lookups_client.phone_numbers.get`)
+ * Send SMS/MMS (`account.messages.create`)
+ * Get a new number (`account.available_phone_numbers`)
+ * Buy a number (`account.incoming_phone_numbers.create`)
+ * Lookup Phone Number information (`client.lookups.v1.phone_numbers`)
 
 ## Setup
 
@@ -53,7 +57,7 @@ attrs = {
   body: 'text message',
 }
 mocker.create_message(attrs)
-client.messages.create(attrs)
+account.messages.create(attrs)
 
 mocker.messages.last # here is your message sent
 

@@ -5,7 +5,6 @@ module TwilioMock
 
     def lookup(number, country_code = nil)
       stub_request(:get, "#{base_twilio_url}/PhoneNumbers/#{number}")
-        .with(headers: headers)
         .to_return(status: 200, body: response(number, country_code), headers: {})
     end
 

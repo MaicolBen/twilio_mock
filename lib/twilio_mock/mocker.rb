@@ -2,11 +2,10 @@ require 'twilio-ruby'
 require 'webmock'
 require_relative 'number_generator'
 require 'ostruct'
+require_relative 'twilify'
 
 module TwilioMock
   class Mocker
-    include Twilio::REST::Utils
-
     API_VERSION = '2010-04-01'.freeze
     HOST = 'api.twilio.com'.freeze
 
@@ -21,9 +20,9 @@ module TwilioMock
     end
 
     def available_number(number = nil, params = nil)
-      query_string = params && params.any? ? twilify(params).to_h.to_query : ''
+      query_string = params && params.any? ? Twilify.process(params).to_h.to_query : ''
       stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/US/Local.json?#{query_string}")
-        .with(headers: headers, basic_auth: basic_auth)
+        .with(basic_auth: basic_auth)
         .to_return(status: 200, body: available_number_response(number), headers: {})
     end
 
@@ -48,10 +47,6 @@ module TwilioMock
       }.to_json
     end
 
-    def headers
-      Twilio::REST::Client::HTTP_HEADERS
-    end
-
     def basic_auth
       [@username, @token]
     end
@@ -65,9 +60,9 @@ module TwilioMock
     end
 
     def prepare_stub(attrs, path)
-      body = twilify(attrs).map { |k, val| [k, val.to_s] }.to_h
+      body = Twilify.process(attrs).map { |k, val| [k, val.to_s] }.to_h
       stub_request(:post, "#{base_twilio_url}/#{path}")
-        .with(body: body, headers: headers, basic_auth: basic_auth)
+        .with(body: body, basic_auth: basic_auth)
         .to_return(status: 200, body: response, headers: {})
     end
 
@@ -75,7 +70,10 @@ module TwilioMock
       number ||= number_generator.generate
       {
         sid: @username,
-        available_phone_numbers: [{ 'PhoneNumber' => number }]
+        available_phone_numbers: [{ 'phone_number' => number }],
+        meta: {
+          key: 'available_phone_numbers'
+        }
       }.to_json
     end
 
