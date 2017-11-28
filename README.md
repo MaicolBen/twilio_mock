@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/MaicolBen/twilio_mock.svg?branch=master)](https://travis-ci.org/MaicolBen/twilio_mock)
 [![Code Climate](https://codeclimate.com/github/MaicolBen/twilio_mock/badges/gpa.svg)](https://codeclimate.com/github/MaicolBen/twilio_mock)
 [![Test Coverage](https://codeclimate.com/github/MaicolBen/twilio_mock/badges/coverage.svg)](https://codeclimate.com/github/MaicolBen/twilio_mock/coverage)
+[![Downloads](https://img.shields.io/gem/dt/twilio_mock.svg)](https://rubygems.org/gems/twilio_mock)
+[![Issues](https://img.shields.io/github/issues/Maicolben/twilio_mock.svg?style=flat-square)](https://github.com/vcr/vcr/issues)
 
 # twilio_mock
 
