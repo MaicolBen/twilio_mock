@@ -22,11 +22,14 @@ module TwilioMock
     end
 
     def available_number_list(params = nil)
-      country_code = params.delete(:country_code)
+      number = number_generator.generate(area_code: params[:area_code]) unless params.delete(:empty_available_list)
+
+      country_code = params.delete(:country_code) || "US"
+
       query_string = params && params.any? ? Twilify.process(params).to_h.to_query : ''
       stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/#{country_code}/Local.json?#{query_string}")
         .with(basic_auth: basic_auth)
-        .to_return(status: 200, body: available_number_response(number_generator.generate(area_code: params[:area_code])), headers: {})
+        .to_return(status: 200, body: available_number_response(number), headers: {})
     end
 
     def buy_number(attrs)
@@ -77,14 +80,17 @@ module TwilioMock
     end
 
     def available_number_response(number)
-      number ||= number_generator.generate
-      {
+      number_response = {
         sid: @username,
-        available_phone_numbers: [{ 'phone_number' => number }],
         meta: {
           key: 'available_phone_numbers'
         }
-      }.to_json
+      }
+
+      number_response[:available_phone_numbers] = [{ 'phone_number' => number }] if number
+      number_response[:available_phone_numbers] ||= []
+
+      number_response.to_json
     end
 
     def number_generator
