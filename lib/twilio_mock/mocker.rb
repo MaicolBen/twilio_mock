@@ -22,8 +22,9 @@ module TwilioMock
     end
 
     def available_number_list(params = nil)
+      country_code = params.delete(:country_code)
       query_string = params && params.any? ? Twilify.process(params).to_h.to_query : ''
-      stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/US/Local.json?#{query_string}")
+      stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/#{country_code}/Local.json?#{query_string}")
         .with(basic_auth: basic_auth)
         .to_return(status: 200, body: available_number_response(number_generator.generate(area_code: params[:area_code])), headers: {})
     end
