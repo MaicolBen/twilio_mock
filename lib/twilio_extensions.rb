@@ -12,6 +12,7 @@ module TwilioExtensions
       client = @version.instance_variable_get(:@domain).client
       params = {}
       params[:area_code] = area_code unless area_code == :unset
+      params[:country_code] = @solution[:country_code]
       TwilioMock::Mocker.new(username: client.account_sid, token: client.auth_token).available_number_list(params) if TwilioMock::Testing.enabled?
       super
     end

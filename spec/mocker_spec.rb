@@ -18,6 +18,14 @@ RSpec.describe TwilioMock::Mocker do
         expect(first_available_number).to match(/112355/)
       end
     end
+
+    context "with a different country" do
+      let(:available_numbers) { client.api.account.available_phone_numbers('BR').local.list({}) }
+
+      it 'returns a test number' do
+        expect(first_available_number).to match(/150055/)
+      end
+    end
   end
 
   describe 'buy a number' do
