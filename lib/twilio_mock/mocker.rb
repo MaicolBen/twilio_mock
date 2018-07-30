@@ -21,15 +21,22 @@ module TwilioMock
       prepare_stub(attrs, 'Messages.json')
     end
 
-    def available_number(number = nil, params = nil)
+    def available_number_list(params = nil)
       query_string = params && params.any? ? Twilify.process(params).to_h.to_query : ''
       stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/US/Local.json?#{query_string}")
         .with(basic_auth: basic_auth)
-        .to_return(status: 200, body: available_number_response(number), headers: {})
+        .to_return(status: 200, body: available_number_response(number_generator.generate(area_code: params[:area_code])), headers: {})
     end
 
     def buy_number(attrs)
-      prepare_stub(attrs, 'IncomingPhoneNumbers.json')
+      phone_number = attrs.with_indifferent_access[:phone_number]
+      response = {
+        account_sid: @username,
+        sid: "PN#{Digest::MD5.hexdigest(phone_number)}",
+        phone_number: phone_number
+      }.to_json
+
+      prepare_stub(attrs, 'IncomingPhoneNumbers.json', response: response)
     end
 
     def messages
@@ -61,7 +68,7 @@ module TwilioMock
       "https://#{HOST}/#{API_VERSION}/Accounts/#{@username}"
     end
 
-    def prepare_stub(attrs, path)
+    def prepare_stub(attrs, path, response: response)
       body = Twilify.process(attrs).map { |k, val| [k, val.to_s] }.to_h
       stub_request(:post, "#{base_twilio_url}/#{path}")
         .with(body: body, basic_auth: basic_auth)

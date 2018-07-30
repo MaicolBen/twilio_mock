@@ -6,7 +6,11 @@ module Twilio
     class Api < Domain
       class V2010 < Version
         class AccountContext < InstanceContext
-          prepend TwilioExtensions::AccountContext
+          class AvailablePhoneNumberCountryContext < InstanceContext
+            class LocalList < ListResource
+              prepend TwilioExtensions::AvailablePhoneNumberContext
+            end
+          end
 
           class MessageList < ListResource
             prepend TwilioExtensions::Messages

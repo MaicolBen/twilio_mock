@@ -12,9 +12,12 @@ module TwilioMock
       @available_numbers = []
     end
 
-    def generate
+    def generate(area_code: nil)
+      base = BASE_TEST_NUMBER if area_code.nil?
+      base ||= "+1#{area_code}555"
+
       number = loop do
-        number = "#{BASE_TEST_NUMBER}#{rand(9999).to_s.rjust(4, '0')}"
+        number = "#{base}#{rand(9999).to_s.rjust(4, '0')}"
         unless @available_numbers.include?(number)
           @available_numbers << number
           break number
