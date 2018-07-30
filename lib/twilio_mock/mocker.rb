@@ -3,6 +3,8 @@ require 'webmock'
 require_relative 'number_generator'
 require 'ostruct'
 require_relative 'twilify'
+require 'active_support'
+require 'active_support/core_ext/object/to_query'
 
 module TwilioMock
   class Mocker
