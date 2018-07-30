@@ -26,6 +26,17 @@ RSpec.describe TwilioMock::Mocker do
         expect(first_available_number).to match(/150055/)
       end
     end
+
+    context "when asking to return an empty list" do
+      let(:mocker) { TwilioMock::Mocker.new }
+      before { mocker.available_number_list(empty_available_list: true)}
+      let(:available_numbers) { client.api.account.available_phone_numbers('US').local.list({}) }
+      it 'returns an empty list' do
+        TwilioMock::Testing.disable! do
+          expect(available_numbers).to be_empty
+        end
+      end
+    end
   end
 
   describe 'buy a number' do
