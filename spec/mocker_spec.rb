@@ -10,6 +10,14 @@ RSpec.describe TwilioMock::Mocker do
     it 'returns a test number' do
       expect(first_available_number).to match(/150055/)
     end
+
+    context "with area code" do
+      let(:available_numbers) { client.api.account.available_phone_numbers('US').local.list(area_code: "123") }
+
+      it 'returns a test number with the correct area code' do
+        expect(first_available_number).to match(/112355/)
+      end
+    end
   end
 
   describe 'buy a number' do
