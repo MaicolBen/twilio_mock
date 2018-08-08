@@ -18,7 +18,15 @@ module TwilioMock
 
     def create_message(attrs)
       messages_queue.add OpenStruct.new(attrs)
-      prepare_stub(attrs, 'Messages.json')
+
+      response = attrs.merge(
+        {
+          sid: "SM#{Digest::MD5.hexdigest(rand.to_s)}",
+          status: "queued"
+        }
+      ).to_json
+
+      prepare_stub(attrs, 'Messages.json', response: response)
     end
 
     def available_number_list(params = nil)
