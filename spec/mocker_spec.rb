@@ -78,6 +78,14 @@ RSpec.describe TwilioMock::Mocker do
       expect(message.body).to eq body
     end
 
+    it 'returns madatory attributes' do
+      response = client.api.account.messages.create(params)
+      expect(response.body).to eq(body)
+      expect(response.sid).to match(/\ASM[a-z\d]{32}\Z/)
+      expect(response.status).to eq("queued")
+      expect(response.to).to eq(to)
+    end
+
     context 'two messages' do
       before do
         client.api.account.messages.create(params)
