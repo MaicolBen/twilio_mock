@@ -51,6 +51,30 @@ RSpec.describe TwilioMock::Mocker do
     end
   end
 
+  describe 'fetches a message' do
+    let(:mocker) { TwilioMock::Mocker.new }
+    let(:sid) { "SM#{Digest::MD5.hexdigest(rand.to_s)}" }
+    let(:status) { "failed" }
+    let(:error_code) { 30004 }
+    let(:error_message) { "Message blocked" }
+    let(:messages) { client.api.account.messages(sid) }
+    let(:message_params) {
+      {
+        error_code: error_code,
+        error_message: error_message,
+        status: status
+      }
+    }
+    before { mocker.fetch_message(sid, message_params) }
+    it 'returns message with correct attributes' do
+      message = messages.fetch
+      expect(message.error_code).to eq error_code
+      expect(message.error_message).to eq error_message
+      expect(message.status).to eq status
+      expect(message.sid).to eq sid
+    end
+  end
+
   describe 'sends a sms' do
     let(:from) { first_available_number }
     let(:to)   { '+15005550003' }

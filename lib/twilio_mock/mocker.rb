@@ -29,6 +29,18 @@ module TwilioMock
       prepare_stub(attrs, 'Messages.json', response: response)
     end
 
+    def fetch_message(sid, attrs)
+      response = attrs.merge(
+        {
+          sid: sid
+        }
+      ).to_json
+
+      stub_request(:get, "#{base_twilio_url}/Messages/#{sid}.json")
+        .with(basic_auth: basic_auth)
+        .to_return(status: 200, body: response, headers: {})
+    end
+
     def available_number_list(params = nil)
       number = number_generator.generate(area_code: params[:area_code]) unless params.delete(:empty_available_list)
 
