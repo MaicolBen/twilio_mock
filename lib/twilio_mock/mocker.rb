@@ -1,6 +1,7 @@
 require 'twilio-ruby'
 require 'webmock'
 require_relative 'number_generator'
+require_relative 'sid_generator'
 require 'ostruct'
 require_relative 'twilify'
 require 'active_support'
@@ -21,7 +22,7 @@ module TwilioMock
 
       response = attrs.merge(
         {
-          sid: "SM#{Digest::MD5.hexdigest(rand.to_s)}",
+          sid: sid_generator.generate("SM"),
           status: "queued"
         }
       ).to_json
@@ -41,6 +42,12 @@ module TwilioMock
         .to_return(status: 200, body: response, headers: {})
     end
 
+    def incoming_number_list(mocked_number_list)
+      stub_request(:get, "#{base_twilio_url}/IncomingPhoneNumbers.json")
+        .with(basic_auth: basic_auth)
+        .to_return(status: 200, body: incoming_number_response(mocked_number_list), headers: {})
+    end
+
     def available_number_list(params = nil)
       number = number_generator.generate(area_code: params[:area_code]) unless params.delete(:empty_available_list)
 
@@ -56,7 +63,7 @@ module TwilioMock
       phone_number = attrs.with_indifferent_access[:phone_number]
       response = {
         account_sid: @username,
-        sid: "PN#{Digest::MD5.hexdigest(phone_number)}",
+        sid: sid_generator.generate("PN"),
         phone_number: phone_number
       }.to_json
 
@@ -99,6 +106,25 @@ module TwilioMock
         .to_return(status: 200, body: response, headers: {})
     end
 
+    def incoming_number_response(number_list)
+      number_response = {
+        start: 0,
+        total: number_list.size,
+        page: 0,
+        page_size: 1,
+        num_pages: number_list.size,
+        account_sid: @username,
+        meta: {
+          key: 'incoming_phone_numbers'
+        },
+        incoming_phone_numbers: number_list.map do |number|
+          { phone_number: number, sid: sid_generator.generate("PN") }
+        end
+      }
+
+      number_response.to_json
+    end
+
     def available_number_response(number)
       number_response = {
         sid: @username,
@@ -111,6 +137,10 @@ module TwilioMock
       number_response[:available_phone_numbers] ||= []
 
       number_response.to_json
+    end
+
+    def sid_generator
+      SidGenerator.instance
     end
 
     def number_generator
