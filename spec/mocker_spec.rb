@@ -39,6 +39,24 @@ RSpec.describe TwilioMock::Mocker do
     end
   end
 
+  describe 'get incoming_phone_numbers list' do
+    let(:mocker) { TwilioMock::Mocker.new }
+    let(:generator) { TwilioMock::NumberGenerator.instance }
+
+    let(:number_1) { generator.generate }
+    let(:number_2) { generator.generate }
+
+    before { mocker.incoming_number_list([number_1, number_2])}
+    let(:incoming_phone_numbers) { client.api.account.incoming_phone_numbers.list }
+    it 'returns the correct number list' do
+      expect(incoming_phone_numbers.size).to eq(2)
+    end
+
+    it 'returns the correct number' do
+      expect(incoming_phone_numbers.first.phone_number).to eq(number_1)
+    end
+  end
+
   describe 'buy a number' do
     it 'calls the incoming api' do
       expect_any_instance_of(TwilioExtensions::IncomingPhoneNumbers).to receive(:create)
