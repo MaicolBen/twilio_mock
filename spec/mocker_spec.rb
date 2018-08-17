@@ -4,6 +4,7 @@ RSpec.describe TwilioMock::Mocker do
   let(:client) { Twilio::REST::Client.new('example', 'example') }
   let(:available_numbers) { client.api.account.available_phone_numbers('US').local.list({}) }
   let(:first_available_number) { available_numbers.first.phone_number }
+  let(:number_generator) { TwilioMock::NumberGenerator.instance }
   let(:sms_url) { 'test.host/callback' }
 
   describe 'get available phone number' do
@@ -41,10 +42,9 @@ RSpec.describe TwilioMock::Mocker do
 
   describe 'get incoming_phone_numbers list' do
     let(:mocker) { TwilioMock::Mocker.new }
-    let(:generator) { TwilioMock::NumberGenerator.instance }
 
-    let(:number_1) { generator.generate }
-    let(:number_2) { generator.generate }
+    let(:number_1) { number_generator.generate }
+    let(:number_2) { number_generator.generate }
 
     before { mocker.incoming_number_list([number_1, number_2])}
     let(:incoming_phone_numbers) { client.api.account.incoming_phone_numbers.list }
@@ -90,6 +90,24 @@ RSpec.describe TwilioMock::Mocker do
       expect(message.error_message).to eq error_message
       expect(message.status).to eq status
       expect(message.sid).to eq sid
+    end
+  end
+
+  describe 'fetches a number' do
+    let(:mocker) { TwilioMock::Mocker.new }
+    let(:sid) { "SM#{Digest::MD5.hexdigest(rand.to_s)}" }
+    let(:phone_number) { number_generator.generate }
+    let(:numbers) { client.api.account.incoming_phone_numbers(sid) }
+    let(:phone_params) {
+      {
+        phone_number: phone_number,
+      }
+    }
+    before { mocker.fetch_number(sid, phone_params) }
+    it 'returns number with correct attributes' do
+      number = numbers.fetch
+      expect(number.sid).to eq sid
+      expect(number.phone_number).to eq phone_number
     end
   end
 
