@@ -42,6 +42,18 @@ module TwilioMock
         .to_return(status: 200, body: response, headers: {})
     end
 
+    def fetch_number(sid, attrs)
+      response = attrs.merge(
+        {
+          sid: sid
+        }
+      ).to_json
+
+      stub_request(:get, "#{base_twilio_url}/IncomingPhoneNumbers/#{sid}.json")
+        .with(basic_auth: basic_auth)
+        .to_return(status: 200, body: response, headers: {})
+    end
+
     def incoming_number_list(mocked_number_list)
       stub_request(:get, "#{base_twilio_url}/IncomingPhoneNumbers.json")
         .with(basic_auth: basic_auth)
