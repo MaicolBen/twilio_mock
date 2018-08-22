@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'twilio_mock'
-  s.version     = '0.4.4'
+  s.version     = '0.4.5'
   s.date        = '2018-08-27'
   s.summary     = 'Mock for the twilio gem'
   s.description = 'Mock for the twilio gem using webmock'

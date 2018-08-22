@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe TwilioMock::Mocker do
-  let(:client) { Twilio::REST::Client.new }
+  let(:client) { Twilio::REST::Client.new('example', 'example') }
   let(:available_numbers) { client.api.account.available_phone_numbers('US').local.list({}) }
   let(:first_available_number) { available_numbers.first.phone_number }
   let(:sms_url) { 'test.host/callback' }
