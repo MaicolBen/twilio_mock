@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe TwilioMock::LookupMocker do
-  let(:client) { Twilio::REST::Client.new() }
+  let(:client) { Twilio::REST::Client.new('example', 'example') }
 
   describe 'get country code from number' do
     it 'returns US' do

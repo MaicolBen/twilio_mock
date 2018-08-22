@@ -9,9 +9,9 @@ module TwilioMock
     API_VERSION = '2010-04-01'.freeze
     HOST = 'api.twilio.com'.freeze
 
-    def initialize
-      @username = Twilio.account_sid
-      @token = Twilio.auth_token
+    def initialize(username: Twilio.account_sid, token: Twilio.auth_token)
+      @username = username
+      @token = token
     end
 
     def create_message(attrs)
