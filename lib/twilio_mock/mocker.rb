@@ -31,27 +31,15 @@ module TwilioMock
     end
 
     def fetch_message(sid, attrs)
-      response = attrs.merge(
-        {
-          sid: sid
-        }
-      ).to_json
-
       stub_request(:get, "#{base_twilio_url}/Messages/#{sid}.json")
         .with(basic_auth: basic_auth)
-        .to_return(status: 200, body: response, headers: {})
+        .to_return(status: 200, body: base_response(sid, attrs), headers: {})
     end
 
     def fetch_number(sid, attrs)
-      response = attrs.merge(
-        {
-          sid: sid
-        }
-      ).to_json
-
       stub_request(:get, "#{base_twilio_url}/IncomingPhoneNumbers/#{sid}.json")
         .with(basic_auth: basic_auth)
-        .to_return(status: 200, body: response, headers: {})
+        .to_return(status: 200, body: base_response(sid, attrs), headers: {})
     end
 
     def incoming_number_list(mocked_number_list)
@@ -62,13 +50,11 @@ module TwilioMock
 
     def available_number_list(params = nil)
       number = number_generator.generate(area_code: params[:area_code]) unless params.delete(:empty_available_list)
+      country_code = params.delete(:country_code)
 
-      country_code = params.delete(:country_code) || "US"
+      query_string = params.any? ? Twilify.process(params).to_h.to_query : ''
 
-      query_string = params && params.any? ? Twilify.process(params).to_h.to_query : ''
-      stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/#{country_code}/Local.json?#{query_string}")
-        .with(basic_auth: basic_auth)
-        .to_return(status: 200, body: available_number_response(number), headers: {})
+      available_number_list_stub(country_code, query_string, number)
     end
 
     def buy_number(attrs)
@@ -137,6 +123,12 @@ module TwilioMock
       number_response.to_json
     end
 
+    def available_number_list_stub(country_code, query_string, number)
+      stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/#{country_code || "US"}/Local.json?#{query_string}")
+        .with(basic_auth: basic_auth)
+        .to_return(status: 200, body: available_number_response(number), headers: {})
+    end
+
     def available_number_response(number)
       number_response = {
         sid: @username,
@@ -149,6 +141,14 @@ module TwilioMock
       number_response[:available_phone_numbers] ||= []
 
       number_response.to_json
+    end
+
+    def base_response(sid, attrs)
+      attrs.merge(
+        {
+          sid: sid
+        }
+      ).to_json
     end
 
     def sid_generator
