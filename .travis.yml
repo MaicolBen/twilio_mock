@@ -9,7 +9,6 @@ env:
   global:
     - CC_TEST_REPORTER_ID=29e8796e57a400fa2b7138b0f1832e3d6553886ef46c6dc5ab88ea7d621768d3
 rvm:
-  - 2.2.8
   - 2.3.8
   - 2.4.9
   - 2.5.7

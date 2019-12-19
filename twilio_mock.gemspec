@@ -8,6 +8,6 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
   s.required_ruby_version = '>= 2.2'
 
-  s.add_dependency 'twilio-ruby', '~> 5.3', '>= 5.3.1'
+  s.add_dependency 'twilio-ruby', '~> 5.31', '>= 5.31.1'
   s.add_dependency 'webmock', '~> 3.0', '>= 2'
 end
