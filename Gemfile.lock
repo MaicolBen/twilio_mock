@@ -17,7 +17,7 @@ GEM
     faraday (0.17.1)
       multipart-post (>= 1.2, < 3)
     hashdiff (1.0.0)
-    json (2.1.0)
+    json (2.3.1)
     jwt (2.2.1)
     mini_portile2 (2.4.0)
     multipart-post (2.1.1)
