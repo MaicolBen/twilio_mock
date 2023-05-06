@@ -1,5 +1,5 @@
-require 'twilio-ruby'
-require 'twilio_extensions'
+require "twilio-ruby"
+require "twilio_extensions"
 
 module Twilio
   module REST

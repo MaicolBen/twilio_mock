@@ -5,7 +5,7 @@ module TwilioMock
 
       def __set_test_mode(mode)
         if block_given?
-          current_mode = self.__test_mode
+          current_mode = __test_mode
           begin
             self.__test_mode = mode
             yield
@@ -26,11 +26,11 @@ module TwilioMock
       end
 
       def enabled?
-        self.__test_mode == :enable
+        __test_mode == :enable
       end
 
       def disabled?
-        self.__test_mode == :disable
+        __test_mode == :disable
       end
     end
   end

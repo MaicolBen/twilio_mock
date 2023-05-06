@@ -1,9 +1,9 @@
-require 'simplecov'
+require "simplecov"
 SimpleCov.start
 
-require 'bundler/setup'
-require 'webmock/rspec'
-require './lib/twilio_mock'
+require "bundler/setup"
+require "webmock/rspec"
+require "./lib/twilio_mock"
 
 WebMock.disable_net_connect!(allow_localhost: true)
 

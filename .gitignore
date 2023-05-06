@@ -4,3 +4,4 @@
 tmp/
 coverage
 .byebug_history
+.idea

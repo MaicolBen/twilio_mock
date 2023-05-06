@@ -1,7 +1,7 @@
 module TwilioMock
   class LookupMocker < Mocker
-    API_VERSION = 'v1'.freeze
-    HOST = 'lookups.twilio.com'.freeze
+    API_VERSION = "v1".freeze
+    HOST = "lookups.twilio.com".freeze
 
     def lookup(number, country_code = nil)
       stub_request(:get, "#{base_twilio_url}/PhoneNumbers/#{number}")
@@ -12,7 +12,7 @@ module TwilioMock
 
     def response(number, country_code)
       {
-        country_code: country_code || 'US',
+        country_code: country_code || "US",
         phone_number: number,
         url: "#{base_twilio_url}/PhoneNumber/number"
       }.to_json

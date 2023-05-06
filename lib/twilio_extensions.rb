@@ -1,6 +1,6 @@
 module TwilioExtensions
   module AccountContext
-    def available_phone_numbers(country_code=:unset)
+    def available_phone_numbers(country_code = :unset)
       client = @version.instance_variable_get(:@domain).client
       TwilioMock::Mocker.new(username: client.account_sid, token: client.auth_token).available_number if TwilioMock::Testing.enabled?
       super(country_code)

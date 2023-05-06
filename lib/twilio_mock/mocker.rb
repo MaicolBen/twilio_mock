@@ -1,13 +1,13 @@
-require 'twilio-ruby'
-require 'webmock'
-require_relative 'number_generator'
-require 'ostruct'
-require_relative 'twilify'
+require "twilio-ruby"
+require "webmock"
+require_relative "number_generator"
+require "ostruct"
+require_relative "twilify"
 
 module TwilioMock
   class Mocker
-    API_VERSION = '2010-04-01'.freeze
-    HOST = 'api.twilio.com'.freeze
+    API_VERSION = "2010-04-01".freeze
+    HOST = "api.twilio.com".freeze
 
     def initialize(username: Twilio.account_sid, token: Twilio.auth_token)
       @username = username
@@ -16,18 +16,18 @@ module TwilioMock
 
     def create_message(attrs)
       messages_queue.add OpenStruct.new(attrs)
-      prepare_stub(attrs, 'Messages.json')
+      prepare_stub(attrs, "Messages.json")
     end
 
     def available_number(number = nil, params = nil)
-      query_string = params && params.any? ? Twilify.process(params).to_h.to_query : ''
+      query_string = (params && params.any?) ? Twilify.process(params).to_h.to_query : ""
       stub_request(:get, "#{base_twilio_url}/AvailablePhoneNumbers/US/Local.json?#{query_string}")
         .with(basic_auth: basic_auth)
         .to_return(status: 200, body: available_number_response(number), headers: {})
     end
 
     def buy_number(attrs)
-      prepare_stub(attrs, 'IncomingPhoneNumbers.json')
+      prepare_stub(attrs, "IncomingPhoneNumbers.json")
     end
 
     def messages
@@ -70,9 +70,9 @@ module TwilioMock
       number ||= number_generator.generate
       {
         sid: @username,
-        available_phone_numbers: [{ 'phone_number' => number }],
+        available_phone_numbers: [{"phone_number" => number}],
         meta: {
-          key: 'available_phone_numbers'
+          key: "available_phone_numbers"
         }
       }.to_json
     end

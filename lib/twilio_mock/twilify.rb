@@ -9,8 +9,8 @@ module Twilify
       something = something.flatten(1)
       Hash[*something]
     else
-      something.to_s.split('_').map! do |s|
-        [s[0,1].capitalize, s[1..-1]].join
+      something.to_s.split("_").map! do |s|
+        [s[0, 1].capitalize, s[1..-1]].join
       end.join
     end
   end
