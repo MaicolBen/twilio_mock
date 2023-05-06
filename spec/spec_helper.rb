@@ -1,5 +1,7 @@
 require 'simplecov'
-SimpleCov.start
+if ENV['CI']
+  SimpleCov.start
+end
 
 require 'bundler/setup'
 require 'webmock/rspec'

@@ -13,8 +13,8 @@ module TwilioMock
     HOST = 'api.twilio.com'.freeze
 
     def initialize(username: Twilio.account_sid, token: Twilio.auth_token)
-      @username = username
-      @token = token
+      @username = username || ''
+      @token = token || ''
     end
 
     def create_message(attrs)
@@ -86,6 +86,7 @@ module TwilioMock
     end
 
     def basic_auth
+      puts [@username, @token]
       [@username, @token]
     end
 
@@ -97,7 +98,7 @@ module TwilioMock
       "https://#{HOST}/#{API_VERSION}/Accounts/#{@username}"
     end
 
-    def prepare_stub(attrs, path, response: response)
+    def prepare_stub(attrs, path, response:)
       body = Twilify.process(attrs).map { |k, val| [k, val.to_s] }.to_h
       stub_request(:post, "#{base_twilio_url}/#{path}")
         .with(body: body, basic_auth: basic_auth)
